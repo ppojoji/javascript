@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>chart</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!-- <script type="text/javascript" src="/js/chart/chart.js"></script> -->
+<script type="text/javascript" src="/js/chart/Chart.bundle.js"></script>
+<script src="./chart-wrapper.js"></script>
+<style>
+    .chart {
+        width: 600px;
+    }
+</style>
+</head>
+<body>
+<div>
+    <div class="control">
+        <div class="activity">
+            <button data-action="activityPieChart">운동정보(파이)</button>
+            <button data-action="barStackChart">운동정보(stack막대)</button>
+            <button data-action="walkChart">걷기(bar 막대)</button>
+            <button data-action="runningChart">달리기(bar 막대)</button>
+            <button data-action="bycChart">자전거(bar 막대)</button>
+            <button data-action="hikingChart">하이킹(bar 막대)</button>
+            <button data-action="bloodSugarChart">운동정보(표식있는 선)</button>
+            <button data-action="scatterChart">운동정보(분산형 점)</button>
+            <button data-action="bloodPressureChart">운동정보(혈압)</button>
+        </div>
+        <div class="duration">
+            <input type="radio" name="dur" value="day">일</input>
+            <input type="radio" name="dur" value="week">주</input>
+            <input type="radio" name="dur" value="month">월</input>
+            <input type="radio" name="dur" value="year">연</input>
+        </div>
+    </div>
+    <div class="chart">
+        <canvas id="abc"></canvas>
+    </div>
+	
+</div>
+</div>
+</body>
+<script>
+const data = {
+    activityPieChart: {
+        day: [123, 134, 221, 367],
+        week: [456, 1343, 563, 542],
+        month: [1542, 2433, 1164, 2134],
+        year: [3234, 5456, 7535, 6678]
+    },
+    barStackChart: {
+        day: [
+            {
+                label: 'walk',
+                data: [12, 34, 65, 78, 13, 90],
+                backgroundColor: 'red'
+            },
+            {
+                label: 'running',
+                data:  [45, 34, 123, 67, 23, 67],
+                backgroundColor: 'blue'
+            },
+            {
+                label: 'byc',
+                data: [15, 84, 73, 90, 123, 267],
+                backgroundColor: 'darkgreen'
+            },
+            {
+                label: 'hiking',
+                data: [45, 34, 123, 67, 23, 67],
+                backgroundColor: 'aliceblue'
+            }
+        ],
+        week: [
+            {
+                label: 'walk',
+                data: [32, 36, 65, 21, 43, 52,45],
+                backgroundColor: 'red'
+            },
+            {
+                label: 'running',
+                data:  [54, 43, 32, 76, 32, 76,54],
+                backgroundColor: 'blue'
+            },
+            {
+                label: 'byc',
+                data: [51, 48, 37, 82, 32, 76,66],
+                backgroundColor: 'darkgreen'
+            },
+            {
+                label: 'hiking',
+                data: [25, 13, 32, 43, 32, 76,72],
+                backgroundColor: 'aliceblue'
+            }
+        ],
+        month: [
+            {
+                label: 'walk',
+                data: [54, 78, 55, 44, 89, 60],
+                backgroundColor: 'red'
+            },
+            {
+                label: 'running',
+                data:  [22, 53, 29, 65, 17, 99],
+                backgroundColor: 'blue'
+            },
+            {
+                label: 'byc',
+                data: [88, 65, 73, 90, 44, 55],
+                backgroundColor: 'darkgreen'
+            },
+            {
+                label: 'hiking',
+                data: [45, 34, 123, 67, 23, 67],
+                backgroundColor: 'aliceblue'
+            }
+        ],
+        year: [
+            {
+                label: 'walk',
+                data: [12, 34, 65, 78, 13, 90],
+                backgroundColor: 'red'
+            },
+            {
+                label: 'running',
+                data:  [86, 56, 78, 45, 87, 37],
+                backgroundColor: 'blue'
+            },
+            {
+                label: 'byc',
+                data: [98, 84, 75, 38, 19, 26],
+                backgroundColor: 'darkgreen'
+            },
+            {
+                label: 'hiking',
+                data: [54, 65, 86, 54, 87, 84],
+                backgroundColor: 'aliceblue'
+            }
+        ]
+
+    },
+    walkChart: {
+        day: [123, 134, 221, 367, 223, 464],
+        week: [4456, 3343, 2563, 5542, 4330, 2164, 3134],
+        month: [1542, 2433, 1164, 2134],
+        year: [3234, 5456, 7535, 6678]
+    },
+    runningChart: {
+        day: [123, 134, 221, 367, 223, 464],
+        week: [456, 1343, 563, 542, 433, 164, 134],
+        month: [1542, 2433, 1164, 2134],
+        year: [3234, 5456, 7535, 6678]
+    },
+    bycChart: {
+        day: [123, 134, 221, 367, 223, 464],
+        week: [456, 1343, 563, 542, 433, 164, 134],
+        month: [1542, 2433, 1164, 2134],
+        year: [3234, 5456, 7535, 6678]
+    },
+    hikingChart: {
+        day: [123, 134, 221, 367, 223, 464],
+        week: [456, 1343, 563, 542, 433, 164, 134],
+        month: [1542, 2433, 1164, 2134],
+        year: [3234, 5456, 7535, 6678]
+    },
+    bloodSugarChart: {
+        day: [123, 134, 221, 367, 223, 464],
+        week: [456, 1343, 563, 542, 433, 164, 134],
+        month: [1542, 2433, 1164, 2134],
+        year: [3234, 5456, 7535, 6678]
+    },
+    scatterChart: {
+      day: [
+              {
+                 x: 5,
+                 y: 0
+              },
+              {
+                 x: 6,
+                 y: 10
+              },
+              {
+                x: 7,
+                y: 5
+              },
+              {
+                x: 8,
+                y: 5.5
+              },
+              {
+                x: 9,
+                y: 5.5
+              }
+           ],
+      week: [
+              {
+                 x: 10,
+                 y: 5
+              },
+              {
+                 x: 3,
+                 y: 2
+              },
+              {
+                x: 15,
+                y: 6
+              },
+              {
+                x: 25,
+                y: 15
+              },
+              {
+                x: 35,
+                y: 26
+              },
+              {
+                x: 31,
+                y: 20
+              },
+              {
+                x: 15,
+                y: 26
+              },
+           ],
+      month: [
+              {
+                 x: 30,
+                 y: 20
+              },
+              {
+                 x: 20,
+                 y: 10
+              },
+              {
+                x: 15,
+                y: 5
+              },
+              {
+                x: 25,
+                y: 15
+              }
+           ],
+     year: [
+              {
+                 x: 45,
+                 y: 24
+              },
+              {
+                 x: 34,
+                 y: 28
+              },
+              {
+                x: 20,
+                y: 15
+              },
+              {
+                x: 15,
+                y: 5
+              }
+           ]
+    },
+    bloodPressureChart: {
+        day: [{
+            data: [223, 234, 321, 467, 323, 564]
+        }, {
+            data: [113, 124, 211, 357, 213, 454]
+        }],
+        
+        week: [456, 1343, 563, 542, 433, 164, 134],
+        month: [1542, 2433, 1164, 2134],
+        year: [3234, 5456, 7535, 6678]
+    }
+}
+
+const user = {
+   age: 61
+}
+
+/* const avg = {
+    week: {
+        50: 4444,
+        60: 3333,
+        70: 2222,
+        80:11111
+    },
+    month: {
+        50: 4444 * 4,
+        60: 3333 * 4,
+        70: 2222 * 4,
+        80:11111 * 4
+    }
+} */
+const avgWalk = {
+    50: 7500,
+    60: 4000,
+    70: 2500,
+    80: 2000
+}
+$(document).ready(() => {
+    let chartName;
+    let duration = '';
+    $("[data-action]").on("click" ,(e) =>{
+        chartName = $(e.target).data("action");
+
+        console.log(chartName);
+        var duration = 'day'
+        chart[chartName](
+            '#abc',
+            duration,
+            data[chartName][duration],
+            (failColor, successColor) => {
+                return successColor
+            }
+        )
+    })
+    $("input[name='dur']").on("change", (e)=> {
+        console.log(e.target.value);
+        const duration = e.target.value
+
+        const dayColorResolver = (failColor, successColor, value) => {
+            return failColor
+        }
+
+        const WMYColorResolver = (failColor, successColor, value) => {
+            if (value >= avgWalk[60]) {
+                return successColor
+            } else {
+                return failColor
+            }
+        }
+
+        let colorResolver
+        if(e.target.value === 'day' ){
+            colorResolver = dayColorResolver
+        }else{
+            colorResolver = WMYColorResolver
+        }
+        chart[chartName](
+            '#abc',
+            duration,
+            data[chartName][duration],
+            colorResolver
+        )
+    })
+})
+</script>
+</html>
